@@ -17,6 +17,19 @@ class Settings(BaseSettings):
     secret_key: str = "change-me"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
+    cors_origins: str = (
+        "http://localhost:8501,"
+        "http://127.0.0.1:8501,"
+        "https://asticle.streamlit.app"
+    )
+
+    @property
+    def cors_origin_list(self) -> list[str]:
+        return [
+            origin.strip().rstrip("/")
+            for origin in self.cors_origins.split(",")
+            if origin.strip()
+        ]
 
     model_config = SettingsConfigDict(
         env_file=PROJECT_ENV_FILE,
