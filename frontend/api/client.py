@@ -3,11 +3,11 @@ from typing import Any
 import requests
 import streamlit as st
 
-from config import BACKEND_URL, REQUEST_TIMEOUT
+from config import REQUEST_TIMEOUT, get_backend_url
 
 
 def endpoint(path: str) -> str:
-    return f"{BACKEND_URL}{path}"
+    return f"{get_backend_url()}{path}"
 
 
 def media_url(path: str | None) -> str | None:
