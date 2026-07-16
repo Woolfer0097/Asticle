@@ -6,8 +6,6 @@ from api.client import get_error_message, get_favourites, get_article
 from patterns.article import render_article_card
 from patterns.header import header
 
-from patterns.cookie import controller
-
 header()
 
 st.title("Избранное")

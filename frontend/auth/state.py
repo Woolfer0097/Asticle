@@ -4,15 +4,16 @@ import requests
 import streamlit as st
 
 from api.client import error_message, get_profile
-from patterns.cookie import controller
+from patterns.cookie import get_cookie, remove_cookie, set_cookie
 
 
-AUTH_COOKIE = "access_token"
+AUTH_COOKIE = "asticle_access_token"
+LEGACY_AUTH_COOKIE = "access_token"
 AUTH_COOKIE_MAX_AGE = 60 * 60 * 24 * 30
 
 
 def init_state() -> None:
-    cookie_token = controller.get(AUTH_COOKIE)
+    cookie_token = get_cookie(AUTH_COOKIE)
     defaults = {
         "token": cookie_token,
         "profile": None,
@@ -30,7 +31,7 @@ def get_token() -> str | None:
     if token:
         return token
 
-    cookie_token = controller.get(AUTH_COOKIE)
+    cookie_token = get_cookie(AUTH_COOKIE)
     if cookie_token:
         st.session_state["token"] = cookie_token
         return cookie_token
@@ -40,7 +41,7 @@ def get_token() -> str | None:
 
 def save_token(token: str) -> None:
     st.session_state["token"] = token
-    controller.set(AUTH_COOKIE, token, max_age=AUTH_COOKIE_MAX_AGE)
+    set_cookie(AUTH_COOKIE, token, max_age=AUTH_COOKIE_MAX_AGE)
 
 
 def save_auth(access_token: str, profile: dict[str, Any] | None = None) -> None:
@@ -52,7 +53,8 @@ def save_auth(access_token: str, profile: dict[str, Any] | None = None) -> None:
 def clear_auth() -> None:
     st.session_state["token"] = None
     st.session_state["profile"] = None
-    controller.remove(AUTH_COOKIE)
+    remove_cookie(AUTH_COOKIE)
+    remove_cookie(LEGACY_AUTH_COOKIE)
 
 
 def is_authenticated() -> bool:

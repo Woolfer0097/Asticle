@@ -2,10 +2,9 @@ import requests
 import streamlit as st
 
 from api.client import get_error_message, login, get_my_user
-from auth.state import clear_auth, is_authenticated, save_auth
+from auth.state import clear_auth, is_authenticated, save_auth, save_token
 
 from patterns.header import header
-from patterns.cookie import controller
 
 header()
 
@@ -46,7 +45,7 @@ if submitted:
         st.error("Backend не вернул access_token.")
         st.stop()
 
-    controller.set("access_token", access_token)
+    save_token(access_token)
 
     try:
         profile_response = get_my_user()
